@@ -41,7 +41,7 @@ module async_fifo_tb ();
         if (!$value$plusargs("read_half_period=%f", read_half_period)) begin
             read_half_period = 5.0;
         end
-        $display("Running with write_period=%0.2f read_period=%0.2f", write_half_period, read_half_period);
+        $display("Running with write_half_period=%0.2f read_half_period=%0.2f", write_half_period, read_half_period);
         write_clk = 0;
         read_clk = 0;
 
