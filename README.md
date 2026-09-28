@@ -45,4 +45,5 @@ It turned out in dual_port_ram, I had implemented read_data with sequential logi
 
 ### Future Work
 - almost_full and almost_empty flags
-- sequential read_data
+- Sequential read_data
+- Formal hardware verification, e.g. using SymbiYosys
