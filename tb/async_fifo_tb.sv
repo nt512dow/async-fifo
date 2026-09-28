@@ -27,7 +27,6 @@ module async_fifo_tb ();
     integer successful_writes = 0;
     integer successful_reads = 0;
     reg [WIDTH-1:0] q[$];
-    reg element_read;
 
     real write_half_period;
     real read_half_period;
@@ -42,14 +41,27 @@ module async_fifo_tb ();
             read_half_period = 5.0;
         end
         $display("Running with write_half_period=%0.2f read_half_period=%0.2f", write_half_period, read_half_period);
+        
         write_clk = 0;
         read_clk = 0;
 
-        forever #(write_half_period) write_clk = ~write_clk;
-        forever #(read_half_period) read_clk = ~read_clk;
+        fork
+            forever #(write_half_period) write_clk = ~write_clk;
+            forever #(read_half_period) read_clk = ~read_clk;
+        join
+    end
+
+    //reset
+    initial begin 
+        reset = 0;
+        #(write_half_period + read_half_period) //ensures that we catch posedge of both clocks 
+        assert(full == 0 && empty == 1);
+        #(write_half_period + read_half_period)
+        reset = 1;
     end
 
     initial begin
+        #((write_half_period + read_half_period)+(write_half_period + read_half_period)) //wait for reset test
         fork 
             begin : write_simulation
                 forever @(posedge write_clk) begin
@@ -73,7 +85,6 @@ module async_fifo_tb ();
                 forever @(posedge read_clk) begin
                     if (!empty && read_en) begin
                         successful_reads <= successful_reads + 1;
-                        
                     end
 
                     if ($urandom_range(1, 100) <= 70) begin
@@ -89,6 +100,7 @@ module async_fifo_tb ();
                 forever @(posedge read_clk) begin
                     if (!empty && read_en && q.size() > 0) begin
                         automatic reg [WIDTH-1:0] current_front_element = q.pop_front();
+                        /* // used to display debugging values
                         if (current_front_element != read_data) begin
                             $display("ERROR");
                             $display("the current front element is %0d and read data is %0d", current_front_element, read_data);
@@ -98,14 +110,14 @@ module async_fifo_tb ();
                             $display("the current front element is %0d and read data is %0d", current_front_element, read_data);
                             $display("the successful reads are %0d, the successful writes are %0d", successful_reads, successful_writes);
                         end
+                        */
+    
                         assert(current_front_element == read_data);
                     end
                     #1; //done to avoid race conditions between posedge write_clk and posedge read_clk
                     assert(successful_reads <= successful_writes);
                 end
             end
-    
-            
         join 
     end
     

@@ -6,8 +6,8 @@ module dual_port_ram #(parameter DEPTH = 16, WIDTH = 4) (
     input write_clk,
     
     input read_clk,
-    input [$clog2(DEPTH)-1:0] read_address,
-    output [WIDTH-1:0] read_data
+    input [$clog2(DEPTH)-1:0] next_read_address,
+    output reg [WIDTH-1:0] read_data
 );
     reg able_to_write;
     reg [WIDTH-1:0] ram[DEPTH];
@@ -17,6 +17,9 @@ module dual_port_ram #(parameter DEPTH = 16, WIDTH = 4) (
         end
     end
 
-    assign read_data = ram[read_address];
+    always @(posedge read_clk) begin
+        read_data <= ram[next_read_address]; //this ensures that the data is valid on the next posedge, no lag
+    end
+
     assign able_to_write = write_en & (~write_full);
 endmodule

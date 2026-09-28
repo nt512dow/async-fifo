@@ -8,13 +8,13 @@ module async_fifo #(parameter DEPTH = 16, WIDTH = 4) (
 
     input reset,
 
-    output reg [WIDTH-1:0] read_data,
-    output reg full,
-    output reg empty
+    output [WIDTH-1:0] read_data,
+    output full,
+    output empty
 );
 
     wire [$clog2(DEPTH)-1:0] write_address;
-    wire [$clog2(DEPTH)-1:0] read_address;
+    wire [$clog2(DEPTH)-1:0] next_read_address;
     wire [$clog2(DEPTH):0] synced_read_ptr;
     wire [$clog2(DEPTH):0] synced_write_ptr; 
     wire [$clog2(DEPTH):0] unsynced_write_ptr;
@@ -28,7 +28,7 @@ module async_fifo #(parameter DEPTH = 16, WIDTH = 4) (
         .write_address(write_address),
         .write_clk(write_clk),
         .read_clk(read_clk),
-        .read_address(read_address),
+        .next_read_address(next_read_address),
         .read_data(read_data)
     );
 
@@ -47,7 +47,7 @@ module async_fifo #(parameter DEPTH = 16, WIDTH = 4) (
         .synced_write_ptr(synced_write_ptr),
         .read_reset(reset),
         .read_clk(read_clk),
-        .read_address(read_address),
+        .next_read_address(next_read_address),
         .read_ptr(unsynced_read_ptr),
         .empty(empty)
     );

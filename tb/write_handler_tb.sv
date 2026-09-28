@@ -33,11 +33,11 @@ module write_handler_tb ();
 
         write_en = 1;
 
-        repeat(15) @(posedge write_clk);
+        repeat(14) @(posedge write_clk);
         #1
         assert(full == 0);
 
-        repeat(2) @(posedge write_clk);
+        repeat(1) @(posedge write_clk);
         #1
         assert(full == 1);
         $finish;

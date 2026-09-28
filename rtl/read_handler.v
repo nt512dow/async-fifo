@@ -4,7 +4,7 @@ module read_handler #(parameter DEPTH) (
     input read_reset,
     input read_clk,
 
-    output [$clog2(DEPTH)-1:0] read_address,
+    output [$clog2(DEPTH)-1:0] next_read_address,
     output reg [$clog2(DEPTH):0] read_ptr,
     output reg empty
 );
@@ -39,6 +39,6 @@ module read_handler #(parameter DEPTH) (
             empty <= (synced_write_ptr == next_read_ptr); 
     end
 
-    assign read_address = current_bin[ADDR_BITS-1:0];
+    assign next_read_address = next_bin[ADDR_BITS-1:0];
 
 endmodule

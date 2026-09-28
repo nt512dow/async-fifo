@@ -5,7 +5,7 @@ module read_handler_tb ();
     reg read_reset = 1;
     reg read_clk = 0;
 
-    wire [$clog2(TEST_DEPTH)-1:0] read_address;
+    wire [$clog2(TEST_DEPTH)-1:0] next_read_address;
     wire [$clog2(TEST_DEPTH):0] read_ptr;
     wire empty;
 
@@ -14,7 +14,7 @@ module read_handler_tb ();
         .synced_write_ptr(synced_write_ptr),
         .read_reset(read_reset),
         .read_clk(read_clk),
-        .read_address(read_address),
+        .next_read_address(next_read_address),
         .read_ptr(read_ptr),
         .empty(empty)
     );
@@ -29,7 +29,7 @@ module read_handler_tb ();
         $dumpvars;
         read_reset = 0;
         #8
-        assert(empty == 1 && read_address == 0 && read_ptr == 0);
+        assert(empty == 1 && next_read_address == 0 && read_ptr == 0);
 
         synced_write_ptr = write_ptr_bin ^ (write_ptr_bin >> 1);
         read_reset = 1;
