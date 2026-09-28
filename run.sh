@@ -5,6 +5,7 @@ set -e
 verilator --binary --timing --trace -Wall -Wno-fatal -f sim/files.f  --top-module async_fifo_tb -o ../sim/sim_out 
 
 #at run time we put our plusargs in 
+#please ensure read_half_period > 0.5 as a 1 delay is used in the checking block
 ./sim/sim_out +write_half_period=5.5 +read_half_period=5.0 +ntb_random_seed=1
 ./sim/sim_out +write_half_period=2.5 +read_half_period=5.0 +ntb_random_seed=2
 ./sim/sim_out +write_half_period=5.0 +read_half_period=2.5 +ntb_random_seed=3
