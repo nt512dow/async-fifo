@@ -1,5 +1,5 @@
 module async_fifo_tb ();
-    localparam  DEPTH = 4, WIDTH = 4, WRITE_HALF_PERIOD = 5.5, READ_HALF_PERIOD = 5;
+    localparam  DEPTH = 4, WIDTH = 4;
     reg [WIDTH-1:0] write_data = 0;
     reg write_en = 0;
     reg write_clk;
@@ -49,9 +49,6 @@ module async_fifo_tb ();
         forever #(read_half_period) read_clk = ~read_clk;
     end
 
-
-    //always #(WRITE_HALF_PERIOD) write_clk = ~write_clk;
-    //always #(READ_HALF_PERIOD) read_clk = ~read_clk;
     initial begin
         fork 
             begin : write_simulation
@@ -114,7 +111,7 @@ module async_fifo_tb ();
     
 
     initial begin
-        wait (write_attempts > 3*DEPTH);
+        wait (write_attempts > 1000*DEPTH);
         $finish;
     end
 
